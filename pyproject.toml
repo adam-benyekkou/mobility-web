@@ -25,10 +25,15 @@ dependencies = [
   "psutil",
   "networkx",
   "plotly",
+<<<<<<< HEAD
   "dash",
   "dash-deck",
   "pydeck",
   "dash-mantine-components"
+=======
+  "scikit-learn",
+  "gtfs_kit"
+>>>>>>> 8cd9f8b4a129f05d3f46cf2f5784b9871b8410d3
 ]
 
 requires-python = ">=3.11"
