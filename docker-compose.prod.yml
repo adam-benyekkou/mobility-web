@@ -1,0 +1,29 @@
+services:
+  mobility:
+    image: cavydev/mobility-arep-internship:latest
+    container_name: mobility-app
+    restart: unless-stopped
+    command: python front/app/pages/main/main.py
+    networks:
+      - proxy-network
+    volumes:
+      - mobility_data:/home/mambauser/.mobility
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mobility.rule=Host(`mobility.cavydev.com`)"
+      - "traefik.http.routers.mobility.entrypoints=websecure"
+      - "traefik.http.routers.mobility.tls.certresolver=myresolver"
+      - "traefik.http.services.mobility.loadbalancer.server.port=8050"
+      - "traefik.docker.network=proxy-network"
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+
+volumes:
+  mobility_data:
+
+
+networks:
+  proxy-network:
+    external: true
