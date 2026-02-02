@@ -75,7 +75,6 @@ class GeofabrikRegions(FileAsset):
             "/europe/france/poitou-charentes",
             "/europe/france/provence-alpes-cote-d-azur",
             "/europe/france/rhone-alpes",
-            "/europe/switzerland",
         ]
         
         regions_urls = ["https://download.geofabrik.de" + url for url in regions_urls]

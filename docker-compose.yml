@@ -1,0 +1,23 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./front:/app/front
+      - ./mobility:/app/mobility
+      - ./front:/app/front
+      - ./mobility:/app/mobility
+      # - mobility_data:/home/mambauser/.mobility  <-- DISABLED: Masked the pre-built Fat Image data
+    environment:
+      - DASH_DEBUG=true
+      - MOBILITY_PACKAGE_DATA_FOLDER=/home/mambauser/.mobility/data
+      - MOBILITY_PROJECT_DATA_FOLDER=/home/mambauser/.mobility/data/projects
+    command: bash -c "python front/app/pages/main/main.py"
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+
+volumes:
+  mobility_data:

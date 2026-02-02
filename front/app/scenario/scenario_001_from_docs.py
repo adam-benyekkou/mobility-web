@@ -58,7 +58,7 @@ def load_scenario() -> dict:
         import mobility
         from mobility.path_routing_parameters import PathRoutingParameters
 
-        mobility.set_params(debug=True, r_packages_download_method="wininet")
+        mobility.set_params(debug=True, r_packages_download_method="auto")
 
         # Patch **instanciation** : fournir cache_path si attendu (certaines versions)
         def _safe_instantiate(cls, *args, **kwargs):

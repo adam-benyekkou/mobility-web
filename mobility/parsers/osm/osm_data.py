@@ -214,7 +214,13 @@ class OSMData(FileAsset):
             "-o", cropped_region_path_str
         ]
         
-        subprocess.run(command)
+        try:
+            subprocess.run(command, check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Osmium extract failed: {e.stderr}")
+            if cropped_region_path.exists():
+                cropped_region_path.unlink()
+            raise e
         
         return cropped_region_path
         
@@ -257,7 +263,13 @@ class OSMData(FileAsset):
             query
         ]
         
-        subprocess.run(command)
+        try:
+            subprocess.run(command, check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Osmium tags-filter failed: {e.stderr}")
+            if filtered_region_path.exists():
+                filtered_region_path.unlink()
+            raise e
         
         return filtered_region_path
     
@@ -284,7 +296,13 @@ class OSMData(FileAsset):
             "-o", str(result_path)
         ]
         
-        subprocess.run(command)
+        try:
+            subprocess.run(command, check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Osmium merge failed: {e.stderr}")
+            if result_path.exists():
+                result_path.unlink()
+            raise e
         
         return result_path
 
@@ -327,7 +345,7 @@ class OSMData(FileAsset):
                     }
                 })
                 
-        n_extracts_max = 20
+        n_extracts_max = 200
         
         with Progress() as progress:
             
@@ -355,7 +373,14 @@ class OSMData(FileAsset):
                     "--strategy", "complete_ways"
                 ]
             
-                subprocess.run(command)
+                try:
+                    subprocess.run(command, check=True, capture_output=True, text=True)
+                except subprocess.CalledProcessError as e:
+                    logging.error(f"Osmium batch extract failed: {e.stderr}")
+                    # Clean up the config at least
+                    if config_fp.exists():
+                        config_fp.unlink()
+                    raise e
                 
                 progress.update(task, advance=1)
         
