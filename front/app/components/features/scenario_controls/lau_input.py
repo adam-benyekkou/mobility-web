@@ -24,8 +24,8 @@ def LauInput(id_prefix: str, *, default_insee: str = "31555"):
         id=f"{id_prefix}-lau-input",
         value=default_insee,
         data=[
-            {"label": "Toulouse", "value": "31555"},
             {"label": "Paris", "value": "75101"},
+            {"label": "Toulouse", "value": "31555"},
             {"label": "Bordeaux", "value": "33063"},
         ],
         searchable=False,  # Prevent typing to avoid confusion
