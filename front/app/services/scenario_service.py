@@ -57,6 +57,10 @@ _STATIC_GDF_CACHE: Dict[str, gpd.GeoDataFrame] = {}
 
 def _load_static_fallback(lau: str, radius: float, params: Dict[str, Any] | None = None) -> Dict[str, Any] | None:
     """Tente de charger un fichier pré-calculé statique si présent et adapte selon les modes actifs."""
+    import geopandas as gpd
+    import pandas as pd
+    import numpy as np
+
     base_path = Path(__file__).resolve().parents[1] / "data" / "precompiled"
     
     # Map normalized LAU to city filenames
@@ -157,6 +161,7 @@ def _load_static_fallback(lau: str, radius: float, params: Dict[str, Any] | None
 
 def _fallback_scenario() -> Dict[str, Any]:
     import geopandas as gpd
+    import pandas as pd
     import numpy as np
     from shapely.geometry import Point
     
