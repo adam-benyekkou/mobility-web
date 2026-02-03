@@ -11,7 +11,7 @@ from app.scenario.scenario_001_from_docs import load_scenario
 
 # ---------- CONSTANTES ----------
 CARTO_POSITRON_GL = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-FALLBACK_CENTER = (1.4442, 43.6045)  # Toulouse
+FALLBACK_CENTER = (2.3522, 48.8566)  # Paris
 
 
 # ---------- HELPERS ----------
