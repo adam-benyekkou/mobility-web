@@ -83,7 +83,7 @@ def register_callbacks(app, MAPP: str = "map"):
         State({"type": "pt-submode", "index": ALL}, "checked"),
         State({"type": "pt-submode", "index": ALL}, "id"),
         State(f"{MAPP}-deck-memo", "data"),
-        prevent_initial_call=False,
+        prevent_initial_call=True,
     )
     def _handle_simulation(
         n_clicks,
