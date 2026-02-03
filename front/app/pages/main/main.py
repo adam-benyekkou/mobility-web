@@ -59,7 +59,7 @@ def create_app() -> Dash:
             children=[
                 Header("MOBILITY"),
                 dcc.Store(id="session-id", data=str(uuid.uuid4()), storage_type="session"),
-                dcc.Store(id=f"{MAPP}-deck-memo", data={"key": str(uuid.uuid4()), "lau": "fr-75101"}),
+                dcc.Store(id=f"{MAPP}-deck-memo", data={"key": str(uuid.uuid4()), "lau": "fr-75056"}),
                 dmc.AppShellMain(
                     html.Div(
                         Map(id_prefix=MAPP),

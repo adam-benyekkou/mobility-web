@@ -38,16 +38,14 @@ def RadiusControl(
     """
     return dmc.Group(
         [
-            dmc.Text("Radius (km)", fw=600, w=100, ta="right"),
+            dmc.Text("Radius (15km)", fw=600, w=120, ta="right"),
             dmc.Slider(
                 id=f"{id_prefix}-radius-slider",
                 min=15,
                 max=15,
                 step=1,
                 value=15,
-                marks=[
-                    {"value": 15, "label": "15km"},
-                ],
+                # marks=[{"value": 15, "label": "15km"}], # Removed as requested
                 disabled=True,  # Lock it for MVP
                 mb="xl",
             ),
