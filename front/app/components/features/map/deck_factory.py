@@ -70,7 +70,7 @@ def make_deck(scn: dict, opts: DeckOptions) -> pdk.Deck:
          layers = make_layers(zones_gdf)
          lon, lat = safe_center(zones_gdf) or FALLBACK_CENTER
          # City View: Zoom in and tilt
-         final_zoom = 11
+         final_zoom = 9.8
          final_pitch = 45
          final_bearing = -15
     else:
