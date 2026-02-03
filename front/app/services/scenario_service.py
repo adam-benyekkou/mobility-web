@@ -144,56 +144,35 @@ def _load_static_fallback(lau: str, radius: float, params: Dict[str, Any] | None
 
 
 def _fallback_scenario() -> Dict[str, Any]:
-    """Scénario de secours (Toulouse–Blagnac) avec toutes les colonnes de parts (y compris TC).
-
-    Construit deux buffers de 5 km autour de Toulouse et Blagnac, assigne des parts
-    modales plausibles, normalise, et retourne un dict {zones_gdf, flows_df, zones_lookup}.
-    """
-    toulouse = (1.4442, 43.6047)
-    blagnac = (1.3903, 43.6350)
-
+    """Scénario de secours (Paris) avec toutes les colonnes de parts (y compris TC)."""
+    # Paris Center
+    paris = (2.3522, 48.8566)
+    
     pts = gpd.GeoDataFrame(
-        {"transport_zone_id": ["toulouse", "blagnac"], "geometry": [Point(*toulouse), Point(*blagnac)]},
+        {"transport_zone_id": ["paris"], "geometry": [Point(*paris)]},
         geometry="geometry",
         crs=4326,
     )
 
     zones = pts.to_crs(3857)
-    zones["geometry"] = zones.geometry.buffer(5000)  # 5 km
+    zones["geometry"] = zones.geometry.buffer(5000)  # 5 km circle for dummy
     zones = zones.to_crs(4326)
 
-    zones["average_travel_time"] = [18.0, 25.0]
-    zones["total_dist_km"] = [15.0, 22.0]
+    zones["average_travel_time"] = [25.0]
+    zones["total_dist_km"] = [12.0]
 
-    # parts modales "plausibles"
-    car_tlse, bike_tlse, walk_tlse = 0.55, 0.19, 0.16
-    ptw_tlse, ptc_tlse, ptb_tlse = 0.06, 0.03, 0.02  # sous-modes TC
-    carpool_tlse = 0.05
+    # Dummy Modal Share (Paris-like)
+    zones["share_car"] = [0.20]
+    zones["share_bicycle"] = [0.10]
+    zones["share_walk"] = [0.40]
+    zones["share_carpool"] = [0.05]
 
-    car_blg,  bike_blg,  walk_blg  = 0.50, 0.20, 0.15
-    ptw_blg,  ptc_blg,  ptb_blg   = 0.08, 0.04, 0.03
-    carpool_blg = 0.00
-
-    zones["share_car"] = [car_tlse, car_blg]
-    zones["share_bicycle"] = [bike_tlse, bike_blg]
-    zones["share_walk"] = [walk_tlse, walk_blg]
-    zones["share_carpool"] = [carpool_tlse, carpool_blg]
-
-    zones["share_pt_walk"] = [ptw_tlse, ptw_blg]
-    zones["share_pt_car"] = [ptc_tlse, ptc_blg]
-    zones["share_pt_bicycle"] = [ptb_tlse, ptb_blg]
+    zones["share_pt_walk"] = [0.15]
+    zones["share_pt_car"] = [0.05]
+    zones["share_pt_bicycle"] = [0.05]
     zones["share_public_transport"] = zones[["share_pt_walk", "share_pt_car", "share_pt_bicycle"]].sum(axis=1)
-
-    # normalisation pour s’assurer que la somme = 1
-    cols_all = [
-        "share_car", "share_bicycle", "share_walk", "share_carpool",
-        "share_pt_walk", "share_pt_car", "share_pt_bicycle"
-    ]
-    total = zones[cols_all].sum(axis=1)
-    zones[cols_all] = zones[cols_all].div(total.replace(0, np.nan), axis=0).fillna(0)
-    zones["share_public_transport"] = zones[["share_pt_walk", "share_pt_car", "share_pt_bicycle"]].sum(axis=1)
-
-    zones["local_admin_unit_id"] = ["fr-31555", "fr-31069"]
+    
+    zones["local_admin_unit_id"] = ["fr-75056"]
 
     empty_flows = pd.DataFrame(columns=["from", "to", "flow_volume"])
     return {"zones_gdf": _to_wgs84(zones), "flows_df": empty_flows, "zones_lookup": _to_wgs84(pts)}
