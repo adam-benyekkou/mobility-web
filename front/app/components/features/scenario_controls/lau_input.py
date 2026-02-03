@@ -1,6 +1,6 @@
 import dash_mantine_components as dmc
 
-def LauInput(id_prefix: str, *, default_insee: str = "75056"):
+def LauInput(id_prefix: str, *, default_insee: str = None):
     """Crée un champ de saisie pour la zone d’étude (code INSEE ou LAU).
 
     Ce composant permet à l’utilisateur d’indiquer le code de la commune ou
@@ -22,7 +22,7 @@ def LauInput(id_prefix: str, *, default_insee: str = "75056"):
         # description="Choose a city for analysis",
         placeholder="Select one...",
         id=f"{id_prefix}-lau-input",
-        value=default_insee,
+        value=default_insee if default_insee else None,
         data=[
             {"label": "Paris", "value": "75056"},
             {"label": "Marseille", "value": "13055"},

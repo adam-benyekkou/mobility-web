@@ -11,7 +11,7 @@ from app.scenario.scenario_001_from_docs import load_scenario
 
 # ---------- CONSTANTES ----------
 CARTO_POSITRON_GL = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-FALLBACK_CENTER = (2.3522, 48.8566)  # Paris
+FALLBACK_CENTER = (2.2137, 46.2276)  # France (approx. center)
 
 
 # ---------- HELPERS ----------
@@ -205,9 +205,9 @@ def _deck_json():
     view_state = pdk.ViewState(
         longitude=lon_center,
         latitude=lat_center,
-        zoom=10,
-        pitch=35,
-        bearing=-15,
+        zoom=5,
+        pitch=0,
+        bearing=0,
     )
 
     deck = pdk.Deck(

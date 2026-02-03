@@ -117,7 +117,12 @@ def register_callbacks(app, MAPP: str = "map"):
                 except:
                     r = 15.0
                 
-                lau_norm = _normalize_lau(lau_val or "75101")
+                if not lau_val:
+                    # If no city selected, do nothing (keep empty/France view)
+                    return (no_update, no_update, no_update, no_update, 
+                            False, "", 0, False)
+                
+                lau_norm = _normalize_lau(lau_val)
 
                 # Reconstruct params (UI -> Internal)
                 params = {}
