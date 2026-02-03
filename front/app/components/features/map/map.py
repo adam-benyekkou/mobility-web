@@ -85,15 +85,15 @@ def _polygons_for_layer(zones_gdf: gpd.GeoDataFrame):
                 "geometry": [[float(x), float(y)] for x, y in ring],
                 "fill_rgba": color,
                 # ✅ Champs métier visibles dans le tooltip (clés FR)
-                "Unité INSEE": str(insee),
-                "Identifiant de zone": str(zone_id),
-                "Temps moyen de trajet (minutes)": travel_time,
-                "Niveau d’accessibilité": legend,
-                "Distance totale parcourue (km/jour)": total_dist_km,
-                "Temps total de déplacement (min/jour)": total_time_min,
-                "Part des trajets en voiture (%)": share_car,
-                "Part des trajets à vélo (%)": share_bicycle,
-                "Part des trajets à pied (%)": share_walk,
+                "INSEE Unit": str(insee),
+                "Zone ID": str(zone_id),
+                "Avg. Travel Time (min)": travel_time,
+                "Accessibility Level": legend,
+                "Total Distance (km/day)": total_dist_km,
+                "Total Travel Time (min/day)": total_time_min,
+                "Car Share (%)": share_car,
+                "Cycling Share (%)": share_bicycle,
+                "Walking Share (%)": share_walk,
             })
     return polygons
 
@@ -127,12 +127,12 @@ def _deck_json():
 
         def _legend(v):
             if pd.isna(v):
-                return "Donnée non disponible"
+                return "Data unavailable"
             if v <= t1:
-                return "Accès rapide"
+                return "Fast access"
             elif v <= t2:
-                return "Accès moyen"
-            return "Accès lent"
+                return "Medium access"
+            return "Slow access"
 
         def _colorize(v):
             if pd.isna(v):
@@ -231,17 +231,17 @@ def Map():
         tooltip={
             "html": (
                 "<div style='font-family:Arial, sans-serif;'>"
-                "<b style='font-size:14px;'>Zone d’étude</b><br>"
-                "<b>Unité INSEE :</b> {Unité INSEE}<br/>"
-                "<b>Identifiant de zone :</b> {Identifiant de zone}<br/><br/>"
-                "<b style='font-size:13px;'>Mobilité moyenne</b><br>"
-                "Temps moyen de trajet : <b>{Temps moyen de trajet (minutes)}</b> min/jour<br>"
-                "Distance totale parcourue : <b>{Distance totale parcourue (km/jour)}</b> km/jour<br>"
-                "Niveau d’accessibilité : <b>{Niveau d’accessibilité}</b><br/><br/>"
-                "<b style='font-size:13px;'>Répartition modale</b><br>"
-                "Part des trajets en voiture : <b>{Part des trajets en voiture (%)}</b><br>"
-                "Part des trajets à vélo : <b>{Part des trajets à vélo (%)}</b><br>"
-                "Part des trajets à pied : <b>{Part des trajets à pied (%)}</b>"
+                "<b style='font-size:14px;'>Study Area</b><br>"
+                "<b>INSEE Unit:</b> {INSEE Unit}<br/>"
+                "<b>Zone ID:</b> {Zone ID}<br/><br/>"
+                "<b style='font-size:13px;'>Average Mobility</b><br>"
+                "Avg. Travel Time: <b>{Avg. Travel Time (min)}</b> min/day<br>"
+                "Total Distance: <b>{Total Distance (km/day)}</b> km/day<br>"
+                "Accessibility Level: <b>{Accessibility Level}</b><br/><br/>"
+                "<b style='font-size:13px;'>Modal Split</b><br>"
+                "Car Share: <b>{Car Share (%)}</b><br>"
+                "Cycling Share: <b>{Cycling Share (%)}</b><br>"
+                "Walking Share: <b>{Walking Share (%)}</b>"
                 "</div>"
             ),
             "style": {

@@ -87,7 +87,7 @@ def LegendCompact(avg_series):
     vmin, vmax = safe_min_max(avg_series)
     if pd.isna(vmin) or pd.isna(vmax) or vmax - vmin <= 1e-9:
         return dmc.Alert(
-            "Légende indisponible (valeurs manquantes).",
+            "Legend unavailable (missing values).",
             color="gray",
             variant="light",
             radius="sm",
@@ -110,10 +110,10 @@ def LegendCompact(avg_series):
 
     return dmc.Stack(
         [
-            dmc.Text("Légende — temps moyen (min)", fw=600, size="sm"),
-            _chip(c1, f"Accès rapide — {fmt_num(vmin, 1)}–{fmt_num(t1, 1)} min"),
-            _chip(c2, f"Accès moyen — {fmt_num(t1, 1)}–{fmt_num(t2, 1)} min"),
-            _chip(c3, f"Accès lent — {fmt_num(t2, 1)}–{fmt_num(vmax, 1)} min"),
+            dmc.Text("Legend — avg. time (min)", fw=600, size="sm"),
+            _chip(c1, f"Fast access — {fmt_num(vmin, 1)}–{fmt_num(t1, 1)} min"),
+            _chip(c2, f"Medium access — {fmt_num(t1, 1)}–{fmt_num(t2, 1)} min"),
+            _chip(c3, f"Slow access — {fmt_num(t2, 1)}–{fmt_num(vmax, 1)} min"),
             html.Div(
                 style={
                     "height": "10px",
@@ -135,7 +135,7 @@ def LegendCompact(avg_series):
                 gap="xs",
             ),
             dmc.Text(
-                "Plus la teinte est chaude, plus le déplacement moyen est long.",
+                "Warmer colors indicate longer average travel times.",
                 size="xs",
                 style={"opacity": 0.75},
             ),

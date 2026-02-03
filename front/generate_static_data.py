@@ -4,6 +4,8 @@ import geopandas as gpd
 import pandas as pd
 import numpy as np
 import mobility
+import gc
+import psutil
 from mobility.parsers.local_admin_units import LocalAdminUnits
 
 def generate_city_data(city_name, lau_code, output_path):
