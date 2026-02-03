@@ -43,7 +43,7 @@ graph TD
     end
     
     subgraph "Live Deployment"
-        Service -->|Reads (Fast Load)| Static
+        Service -->|"Reads (Fast Load)"| Static
     end
     
     Static -->|Returns Data| UI
