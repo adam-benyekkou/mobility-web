@@ -5,7 +5,7 @@ import gc
 from app.services.scenario_service import get_scenario
 
 class ScenarioManager:
-    MAX_SESSIONS = 5  # Limit memory usage for idle tabs
+    MAX_SESSIONS = 3  # Limit memory usage for idle tabs
 
     def __init__(self):
         self._lock = threading.Lock()
