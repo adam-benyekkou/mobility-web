@@ -69,13 +69,22 @@ def make_deck(scn: dict, opts: DeckOptions) -> pdk.Deck:
          zones_gdf: gpd.GeoDataFrame = scn["zones_gdf"].copy()
          layers = make_layers(zones_gdf)
          lon, lat = safe_center(zones_gdf) or FALLBACK_CENTER
+         # City View: Zoom in and tilt
+         final_zoom = 11
+         final_pitch = 45
+         final_bearing = -15
+    else:
+         # Default France View
+         final_zoom = opts.zoom
+         final_pitch = opts.pitch
+         final_bearing = opts.bearing
 
     view_state = pdk.ViewState(
         longitude=lon,
         latitude=lat,
-        zoom=opts.zoom,
-        pitch=opts.pitch,
-        bearing=opts.bearing,
+        zoom=final_zoom,
+        pitch=final_pitch,
+        bearing=final_bearing,
     )
 
     return pdk.Deck(
