@@ -48,6 +48,7 @@ def create_app() -> Dash:
     """
     app = Dash(
         __name__,
+        title="Mobility",
         suppress_callback_exceptions=True,
         assets_folder=str(ASSETS_PATH),
         assets_url_path="/assets",
