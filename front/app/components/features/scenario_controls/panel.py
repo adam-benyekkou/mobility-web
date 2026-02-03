@@ -13,7 +13,7 @@ def ScenarioControlsPanel(
     max_radius: int = 50,
     step: int = 1,
     default: int | float = 40,
-    default_insee: str = "75101",
+    default_insee: str = None,
 ):
     """Assemble le panneau vertical de contrôle du scénario.
 
