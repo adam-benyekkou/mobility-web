@@ -8,24 +8,62 @@ It was developed during an **internship at [AREP](https://arep.fr)** to provide 
 
 ---
 
+## 🎯 Project Goal
+
+The primary objective of this interface is to democratize access to complex mobility simulations. It enables **non-technical users** (AMOA, Urban Planners, Decision Makers) to:
+
+- **Visualize** mobility dynamics (travel times, modal shares) on interactive maps.
+- **Analyze** territories (covering 10 major French cities) without writing code.
+- **Understand** transport accessibility through clear KPIs and dashboards.
+
+---
+
+## 🏗️ Technical Stack & Architecture
+
+This application wraps the robust scientific capabilities of the `mobility` library into a modern web experience.
+
+### Stack
+
+- **Frontend/App:** [Dash](https://dash.plotly.com/) (Python framework for data apps).
+- **Mapping:** [PyDeck](https://deckgl.readthedocs.io/) (Deck.gl) for high-performance geospatial rendering.
+- **Engine:** `mobility` (Python discrete choice modeling library).
+- **Deployment:** Docker (Micromamba base), GitHub Actions (CI/CD), Traefik (Reverse Proxy).
+
+### Architecture Diagram
+
+```mermaid
+graph TD
+    User((User / AMOA)) -->|Interacts| UI[Web Interface<br/>(Dash & PyDeck)]
+    UI -->|Requests City| Service[Scenario Service]
+    
+    subgraph "Backend Logic"
+        Service -->|Simulation Request| Engine[Mobility Engine<br/>(Python Library)]
+        Engine -->|Downloads & Processes| OSM[OpenStreetMap Data]
+        Engine -.->|Compiles| Static[Pre-baked GeoPackages]
+    end
+    
+    subgraph "Live Deployment"
+        Service -->|Reads (Fast Load)| Static
+    end
+    
+    Static -->|Returns Data| UI
+    
+    style Static fill:#f9f,stroke:#333,stroke-width:2px
+    style UI fill:#bbf,stroke:#333,stroke-width:2px
+```
+
+---
+
 ## ⚠️ Important Note Regarding Data (Live Demo)
 
 The `mobility` engine is a powerful simulation tool that requires significant computational resources (RAM/CPU) and downloads large OpenStreetMap datasets to generate precise travel models.
 
 **For this hosted demonstration:**
 
-- The data you see (travel times, modal shares) is **randomly sampled/pre-baked**.
-- We opted for this lightweight approach because running the full simulation stack requires more memory than available in standard containerized hosting environments, often leading to instability.
+- The data is **randomly sampled/pre-baked** (stored in `.gpkg` files).
+- We opted for this lightweight approach for the [cavydev.com](https://mobility.cavydev.com) deployment to ensure stability and instant loading times on standard containerized infrastructure.
 
-**This interface is fully capable of running the real `mobility` engine** when deployed on appropriate infrastructure (local workstations or high-memory servers).
-
----
-
-## Project Architecture
-
-- **Frontend/App:** Python Dash application (located in `front/`).
-- **Engine:** [Mobility](https://github.com/mobility-team/mobility) (installed as a dependency).
-- **Deployment:** Docker & Traefik.
+**This interface is fully capable of running the real `mobility` engine** (as shown in the architecture) when deployed on appropriate hardware.
 
 ---
 
