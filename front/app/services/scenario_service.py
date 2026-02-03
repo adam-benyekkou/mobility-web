@@ -46,6 +46,12 @@ def _to_wgs84(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     return gdf if epsg == 4326 else gdf.to_crs(4326)
 
 
+# ------------------------------------------------------------
+# In-memory global cache for precompiled cities to save RAM/CPU I/O
+# ------------------------------------------------------------
+_STATIC_GDF_CACHE: Dict[str, gpd.GeoDataFrame] = {}
+
+
 def _load_static_fallback(lau: str, radius: float, params: Dict[str, Any] | None = None) -> Dict[str, Any] | None:
     """Tente de charger un fichier pré-calculé statique si présent et adapte selon les modes actifs."""
     base_path = Path(__file__).resolve().parents[1] / "data" / "precompiled"
@@ -72,11 +78,14 @@ def _load_static_fallback(lau: str, radius: float, params: Dict[str, Any] | None
     
     if static_file.exists():
         try:
-            import geopandas as gpd
-            import pandas as pd
-            import numpy as np
-            print(f"[SCENARIO] Loading PRECOMPILED static data for {lau}: {static_file}")
-            gdf = gpd.read_file(static_file)
+            # Check Memory Cache First
+            if filename in _STATIC_GDF_CACHE:
+                gdf = _STATIC_GDF_CACHE[filename].copy()
+                print(f"[SCENARIO] Using MEMORY CACHE for {lau}")
+            else:
+                print(f"[SCENARIO] Loading PRECOMPILED static data for {lau}: {static_file}")
+                gdf = gpd.read_file(static_file)
+                _STATIC_GDF_CACHE[filename] = gdf.copy()
             
             # Recalculate based on active modes
             if params:
