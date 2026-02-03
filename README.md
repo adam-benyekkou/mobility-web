@@ -4,7 +4,7 @@
 
 It was developed during an **internship at [AREP](https://arep.fr)** to provide a user-friendly interface for visualizing mobility models, generating transport zones, and analyzing modal splits.
 
-**Live Demo:** [https://mobility.cavydev.com](https://mobility.cavydev.com)
+**Live Demo:** [Access the application](https://mobility.cavydev.com)
 
 ---
 
@@ -61,7 +61,7 @@ The `mobility` engine is a powerful simulation tool that requires significant co
 **For this hosted demonstration:**
 
 - The data is **randomly sampled/pre-baked** (stored in `.gpkg` files).
-- We opted for this lightweight approach for the [cavydev.com](https://mobility.cavydev.com) deployment to ensure stability and instant loading times on standard containerized infrastructure.
+- I opted for this lightweight approach for the live deployment to ensure stability and instant loading times on standard containerized infrastructure.
 
 **This interface is fully capable of running the real `mobility` engine** (as shown in the architecture) when deployed on appropriate hardware.
 
