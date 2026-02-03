@@ -97,9 +97,16 @@ def generate_city_data(city_name, lau_code, output_path):
 
 if __name__ == "__main__":
     cities = [
-        ("paris", "fr-75101"),
+        ("paris", "fr-75056"),
+        ("marseille", "fr-13055"),
+        ("lyon", "fr-69123"),
         ("toulouse", "fr-31555"),
-        ("bordeaux", "fr-33063")
+        ("nice", "fr-06088"),
+        ("nantes", "fr-44109"),
+        ("montpellier", "fr-34172"),
+        ("strasbourg", "fr-67482"),
+        ("bordeaux", "fr-33063"),
+        ("lille", "fr-59350")
     ]
     
     base_dir = "front/app/data/precompiled"
