@@ -1,9 +1,4 @@
 dash
 dash-mantine-components
-dash-leaflet
 dash-deck
-dash-bootstrap-components
 pydeck
-dash-extensions
-mapclassify
-matplotlib
