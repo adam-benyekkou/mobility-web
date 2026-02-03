@@ -1,17 +1,29 @@
 import threading
 import traceback
 import time
+import gc
 from app.services.scenario_service import get_scenario
 
 class ScenarioManager:
+    MAX_SESSIONS = 5  # Limit memory usage for idle tabs
+
     def __init__(self):
         self._lock = threading.Lock()
         # Serialize Heavy Simulations: Only 1 at a time to prevent OOM
         self._sim_semaphore = threading.Semaphore(1)
         self.sessions = {}
+        self._session_access_times = {}
 
     def _ensure_session(self, session_id):
         if session_id not in self.sessions:
+            # Cleanup old sessions if we exceed limit
+            if len(self.sessions) >= self.MAX_SESSIONS:
+                oldest_sid = min(self._session_access_times, key=self._session_access_times.get)
+                print(f"[MANAGER] Cleaning up old session data: {oldest_sid}")
+                del self.sessions[oldest_sid]
+                del self._session_access_times[oldest_sid]
+                gc.collect()
+
             self.sessions[session_id] = {
                 "status": "idle",
                 "message": "",
@@ -20,6 +32,7 @@ class ScenarioManager:
                 "error": None,
                 "thread": None
             }
+        self._session_access_times[session_id] = time.time()
 
     def get_status(self, session_id):
         with self._lock:
@@ -34,6 +47,7 @@ class ScenarioManager:
 
     def get_data(self, session_id):
         with self._lock:
+            self._session_access_times[session_id] = time.time()
             return self.sessions.get(session_id, {}).get("data")
 
     def start_simulation(self, session_id, lau, radius, transport_modes_params):
@@ -47,8 +61,10 @@ class ScenarioManager:
             state["status"] = "loading"
             state["message"] = "Waiting for slot..."
             state["progress"] = 1
+            # Clear old data immediately to free memory
             state["data"] = None
             state["error"] = None
+            gc.collect()
             
             thread = threading.Thread(
                 target=self._run_simulation, 
@@ -62,8 +78,7 @@ class ScenarioManager:
         print(f"[MANAGER] Request for {session_id} | LAU={lau} R={radius}")
         
         # Acquire Semaphore: block if busy
-        # storage, network, or high load might delay this, so we give a generous timeout
-        has_slot = self._sim_semaphore.acquire(timeout=600) # 10m timeout wait
+        has_slot = self._sim_semaphore.acquire(timeout=600)
         if not has_slot:
             with self._lock:
                 if session_id in self.sessions:
@@ -75,12 +90,8 @@ class ScenarioManager:
         try:
             print(f"[MANAGER] Starting simulation for {session_id}")
             self.update_progress(session_id, 10, "Preparing spatial data...")
-            print("[MANAGER] Progress 10%")
             self.update_progress(session_id, 25, "Running heavy spatial models...")
-            print("[MANAGER] Progress 25% - Calling get_scenario")
             
-            # This call is SHARED cache. If another user calculated this LAU/Rad,
-            # it will return instantly here and save computation time.
             data = get_scenario(
                 local_admin_unit_id=lau,
                 radius=radius,
@@ -90,22 +101,26 @@ class ScenarioManager:
             self.update_progress(session_id, 90, "Finalizing results...")
             
             with self._lock:
-                state = self.sessions[session_id]
-                state["data"] = data
-                state["status"] = "ready"
-                state["progress"] = 100
-                state["message"] = "Simulation complete!"
+                if session_id in self.sessions: # Verify session still exists
+                    state = self.sessions[session_id]
+                    state["data"] = data
+                    state["status"] = "ready"
+                    state["progress"] = 100
+                    state["message"] = "Simulation complete!"
             print("[MANAGER] Simulation COMPLETE")
+            gc.collect()
                 
         except Exception as e:
             with self._lock:
-                state = self.sessions[session_id]
-                state["status"] = "error"
-                state["error"] = e
-                state["message"] = f"Error: {str(e)}"
+                if session_id in self.sessions:
+                    state = self.sessions[session_id]
+                    state["status"] = "error"
+                    state["error"] = e
+                    state["message"] = f"Error: {str(e)}"
                 traceback.print_exc()
         finally:
             self._sim_semaphore.release()
+            gc.collect()
 
     def update_progress(self, session_id, val, msg):
         with self._lock:

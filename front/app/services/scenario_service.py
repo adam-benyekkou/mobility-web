@@ -22,11 +22,13 @@ Sortie principale (dict):
 from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict, Any, Tuple
-import pandas as pd
-import geopandas as gpd
-import numpy as np
-from shapely.geometry import Point
+from typing import Dict, Any, Tuple, TYPE_CHECKING
+import os
+
+if TYPE_CHECKING:
+    import pandas as pd
+    import geopandas as gpd
+    import numpy as np
 
 # ------------------------------------------------------------
 # Helpers & fallback
@@ -37,6 +39,7 @@ def _to_wgs84(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     - Si le CRS est absent, le définit à 4326 (allow_override=True).
     - Si le CRS n’est pas 4326, reprojette en 4326.
     """
+    import geopandas as gpd
     if gdf.crs is None:
         return gdf.set_crs(4326, allow_override=True)
     try:
@@ -153,7 +156,10 @@ def _load_static_fallback(lau: str, radius: float, params: Dict[str, Any] | None
 
 
 def _fallback_scenario() -> Dict[str, Any]:
-    """Scénario de secours (Paris) avec toutes les colonnes de parts (y compris TC)."""
+    import geopandas as gpd
+    import numpy as np
+    from shapely.geometry import Point
+    
     # Paris Center
     paris = (2.3522, 48.8566)
     
@@ -243,7 +249,11 @@ def _compute_scenario(
     radius: float = 15.0,
     transport_modes_params: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
-    """Calcule un scénario, remplit les parts des modes actifs, renormalise et dérive les indicateurs."""
+    import geopandas as gpd
+    import pandas as pd
+    import numpy as np
+    from shapely.geometry import Point
+    
     # --- NEW: Check for precompiled static data FIRST to bypass heavy R/Osmium
     lau_norm = _normalize_lau_code(local_admin_unit_id or "75101")
     static = _load_static_fallback(lau_norm, float(radius), transport_modes_params)
