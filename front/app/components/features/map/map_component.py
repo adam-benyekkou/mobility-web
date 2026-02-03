@@ -71,8 +71,10 @@ def Map(id_prefix: str = "map"):
         dash.html.Div: Conteneur principal de la page cartographique.
     """
     opts = DeckOptions()
-    deck_json = get_map_deck_json(id_prefix=id_prefix, opts=opts)
-    zones_gdf = get_map_zones_gdf()
+    # INITIAL STATE: Start with empty map (France view), do not load scenario
+    from .deck_factory import make_deck_json
+    deck_json = make_deck_json(None, opts)
+    zones_gdf = None # No initial zones
 
     deckgl = DeckMap(id_prefix=id_prefix, deck_json=deck_json)
     summary = SummaryPanelWrapper(zones_gdf, id_prefix=id_prefix)

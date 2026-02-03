@@ -62,10 +62,13 @@ def make_deck(scn: dict, opts: DeckOptions) -> pdk.Deck:
     Returns:
         pdk.Deck: Instance pydeck prête à être rendue.
     """
-    zones_gdf: gpd.GeoDataFrame = scn["zones_gdf"].copy()
-
-    layers = make_layers(zones_gdf)
-    lon, lat = safe_center(zones_gdf) or FALLBACK_CENTER
+    layers = []
+    lon, lat = FALLBACK_CENTER
+    
+    if scn is not None and "zones_gdf" in scn:
+         zones_gdf: gpd.GeoDataFrame = scn["zones_gdf"].copy()
+         layers = make_layers(zones_gdf)
+         lon, lat = safe_center(zones_gdf) or FALLBACK_CENTER
 
     view_state = pdk.ViewState(
         longitude=lon,
