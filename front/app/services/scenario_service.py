@@ -52,7 +52,7 @@ def _load_static_fallback(lau: str, radius: float, params: Dict[str, Any] | None
     
     # Map normalized LAU to city filenames
     city_map = {
-        "fr-75056": "paris_75056_static.gpkg",
+        "fr-75056": "paris_75101_static.gpkg",
         "fr-13055": "marseille_13055_static.gpkg",
         "fr-69123": "lyon_69123_static.gpkg",
         "fr-31555": "toulouse_31555_static.gpkg",
