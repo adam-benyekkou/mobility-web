@@ -4,11 +4,11 @@
 
 It was developed during an **internship at [AREP](https://arep.fr)** to provide a user-friendly interface for visualizing mobility models, generating transport zones, and analyzing modal splits.
 
-🚀 **Live Demo:** [https://mobility.cavydev.com](https://mobility.cavydev.com)
+**Live Demo:** [https://mobility.cavydev.com](https://mobility.cavydev.com)
 
 ---
 
-## 🎯 Project Goal
+## Project Goal
 
 The primary objective of this interface is to democratize access to complex mobility simulations. It enables **non-technical users** (AMOA, Urban Planners, Decision Makers) to:
 
@@ -18,7 +18,7 @@ The primary objective of this interface is to democratize access to complex mobi
 
 ---
 
-## 🏗️ Technical Stack & Architecture
+## Technical Stack & Architecture
 
 This application wraps the robust scientific capabilities of the `mobility` library into a modern web experience.
 
@@ -33,11 +33,11 @@ This application wraps the robust scientific capabilities of the `mobility` libr
 
 ```mermaid
 graph TD
-    User((User / AMOA)) -->|Interacts| UI[Web Interface<br/>(Dash & PyDeck)]
+    User((User / AMOA)) -->|Interacts| UI["Web Interface<br/>(Dash & PyDeck)"]
     UI -->|Requests City| Service[Scenario Service]
     
     subgraph "Backend Logic"
-        Service -->|Simulation Request| Engine[Mobility Engine<br/>(Python Library)]
+        Service -->|Simulation Request| Engine["Mobility Engine<br/>(Python Library)"]
         Engine -->|Downloads & Processes| OSM[OpenStreetMap Data]
         Engine -.->|Compiles| Static[Pre-baked GeoPackages]
     end
@@ -54,7 +54,7 @@ graph TD
 
 ---
 
-## ⚠️ Important Note Regarding Data (Live Demo)
+## Important Note Regarding Data (Live Demo)
 
 The `mobility` engine is a powerful simulation tool that requires significant computational resources (RAM/CPU) and downloads large OpenStreetMap datasets to generate precise travel models.
 
